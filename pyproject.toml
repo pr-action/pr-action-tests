@@ -5,28 +5,28 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pr-action"
 version = "0.2.2"
-
-authors = [{name= "KhulnaSoft", email = "info@khulnasoft.com"}]
-
-maintainers = [
-  {name = "KhulnaSoft Bot", email = "admin@khulnasoft.com"},
-  {name = "Al Mamun", email = "iconmamundentist@gmail.com"},
-]
-
 description = "KhulnaSoft PR-Action aims to help efficiently review and handle pull requests, by providing AI feedbacks and suggestions."
 readme = "README.md"
 requires-python = ">=3.10"
 keywords = ["AI", "Agents", "Pull Request", "Automation", "Code Review"]
 license = {name = "Apache 2.0", file = "LICENSE"}
 
-classifiers = [
-  "Intended Audience :: Developers",
-  "Programming Language :: Python :: 3",
-]
-dynamic = ["dependencies"]
+[project.authors]
+name = "KhulnaSoft"
+email = "info@khulnasoft.com"
 
+[project.maintainers]
+name = "KhulnaSoft Bot"
+email = "admin@khulnasoft.com"
 
-[tool.setuptools.dynamic]
+name = "Al Mamun"
+email = "iconmamundentist@gmail.com"
+
+[classifiers]
+"Intended Audience :: Developers"
+"Programming Language :: Python :: 3"
+
+[dynamic]
 dependencies = {file = ["requirements.txt"]}
 
 [project.urls]
@@ -44,36 +44,48 @@ include = ["pr_action*"] # include pr_action and any sub-packages it finds under
 [project.scripts]
 pr-action = "pr_action.cli:run"
 
-
 [tool.ruff]
-
 line-length = 120
 
-select = [
-  "E",  # Pyflakes
-  "F",  # Pyflakes
-  "B",  # flake8-bugbear
-  "I001",  # isort basic checks
-  "I002",  # isort missing-required-import
-  ]
+[tool.ruff.select]
+"E"  # Pyflakes
+"F"  # Pyflakes
+"B"  # flake8-bugbear
+"I001"  # isort basic checks
+"I002"  # isort missing-required-import
 
-# First commit - only fixing isort
-fixable = [
-  "I001",  # isort basic checks
-]
+[tool.ruff.fixable]
+"I001"  # isort basic checks
 
-unfixable = [
-  "B",  # Avoid trying to fix flake8-bugbear (`B`) violations.
-  ]
+[tool.ruff.unfixable]
+"B"  # Avoid trying to fix flake8-bugbear (`B`) violations.
 
-exclude = [
-  "api/code_completions",
-]
+[tool.ruff.exclude]
+"api/code_completions"
 
-ignore = [
-  "E999", "B008"
-]
+[tool.ruff.ignore]
+"E999" "B008"
 
 [tool.ruff.per-file-ignores]
-"__init__.py" = ["E402"]  # Ignore `E402` (import violations) in all `__init__.py` files, and in `path/to/file.py`.
-# TODO: should decide if maybe not to ignore these.
+"__init__.py" = ["E402"]  # Ignore `E402` (import violations) in all `__init__.py` files.
+
+[ext]
+modules = [
+    {
+        name = "staticpr_languages",
+        sources = [
+            "languages/languages.c",
+            "languages/treesitterpython/src/parser.c",
+            "languages/treesitterjavascript/src/parser.c",
+            "languages/treesitterpython/src/scanner.cc",
+            "languages/treesitterjavascript/src/scanner.c",
+        ],
+        include_dirs = [
+            "languages/treesitterpython/src",
+            "languages/treesitterjavascript/src",
+            "languages/treesitterjavascript/src/tree_sitter",
+            "languages/treesitterpython/src/tree_sitter",
+        ],
+        extra_compile_args = ["-Wno-unused-variable"] if system() != "Windows" else None,
+    },
+]
