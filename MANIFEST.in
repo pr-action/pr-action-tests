@@ -1,2 +1,4 @@
 recursive-include pr_action *.toml
 recursive-exclude pr_action *.secrets.toml
+include languages/treesitterjavascript/src/tree_sitter/parser.h
+include languages/treesitterpython/src/tree_sitter/parser.h
